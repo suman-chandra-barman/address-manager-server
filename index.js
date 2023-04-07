@@ -66,6 +66,19 @@ app.get("/contacts", async (req, res) => {
   } catch (error) {}
 });
 
+app.delete("/contacts/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const deletedContact = await contactCollection.deleteOne(query);
+    res.send(deletedContact);
+    console.log(deletedContact);
+  } catch (error) {
+    res.send(error);
+    console.error(error);
+  }
+});
+
 // root api
 app.get("/", (req, res) => {
   res.send("Address Manger Server is Running");
