@@ -72,10 +72,28 @@ app.delete("/contacts/:id", async (req, res) => {
     const query = { _id: new ObjectId(id) };
     const deletedContact = await contactCollection.deleteOne(query);
     res.send(deletedContact);
-    console.log(deletedContact);
   } catch (error) {
     res.send(error);
     console.error(error);
+  }
+});
+
+app.put("/contacts/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, email, phone, image } = req.body;
+  try {
+    const result = await contactCollection.updateOne(
+      { _id: ObjectId(id) },
+      { $set: { name, email, phone, image } }
+    );
+    if (result.modifiedCount === 1) {
+      res.send(`User with ID ${id} updated successfully`);
+    } else {
+      res.status(404).send(`User with ID ${id} not found`);
+    }
+  } catch (err) {
+    console.error(err);
+    res.send(err);
   }
 });
 
